@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 
 // Reference for the state machine/combat system from Brackey's "Turn-Based Combat in Unity" https://www.youtube.com/watch?v=_1pz_ohupPs&t
@@ -34,7 +35,9 @@ public class StateMachine : MonoBehaviour
 
 	public Sprite fire, normaldmg;
 	public Sprite eyehead, firehead;
-	
+
+
+	public GameObject DamFig;
 
 
 	public void Start()
@@ -97,6 +100,46 @@ public class StateMachine : MonoBehaviour
 		state = BattleState.PLAYERTURN;
 
 		PlayerTurn();
+	}
+
+	public void DamagePop(int target)
+	{
+		if (target == 0 || target == 1)
+		{
+			GameObject dam = Instantiate(DamFig, enemypos.position, Quaternion.identity);
+			dam.transform.position = new Vector3(dam.transform.position.x - 1, dam.transform.position.y + 1, dam.transform.position.z);
+			if (target == 0)
+			{
+				dam.GetComponentInChildren<TextMeshPro>().text = playerinfo.damage.ToString();
+			}
+			else if (target == 1)
+		    {
+				int doubledam = playerinfo.damage * 2;
+				dam.GetComponentInChildren<TextMeshPro>().text = doubledam.ToString();
+				dam.GetComponentInChildren<TextMeshPro>().color = Color.blue;
+			}
+
+			Destroy(dam, 2);
+			
+
+		}
+		
+		else if (target == 2)
+		{
+			GameObject dam = Instantiate(DamFig, playerPos.position, Quaternion.identity);
+			dam.transform.position = new Vector3(dam.transform.position.x + 1, dam.transform.position.y + 2, dam.transform.position.z);
+			dam.GetComponentInChildren<TextMeshPro>().text = enemyinfo.damage.ToString();
+
+			if (enemyinfo.type == 2)
+			{
+				dam.GetComponentInChildren<TextMeshPro>().color = Color.red;
+			}
+
+			Destroy(dam, 2);
+
+		}
+
+		
 	}
 
 	public void PlayerTurn()
@@ -174,7 +217,7 @@ public class StateMachine : MonoBehaviour
 
 		yield return new WaitForSeconds(0.6f);
 
-
+		DamagePop(0);
 		enemyinfo.currentHP -= playerinfo.damage;
 		enemyhealth.value = enemy.GetComponent<Chara_Info>().currentHP;
 
@@ -210,11 +253,13 @@ public class StateMachine : MonoBehaviour
 		{
 			enemyinfo.currentHP -= playerinfo.damage*2;
 			enemyhealth.value = enemy.GetComponent<Chara_Info>().currentHP;
+			DamagePop(0);
 		}
 		else
 		{
 			enemyinfo.currentHP -= playerinfo.damage + (int) playerinfo.damage/2;
 			enemyhealth.value = enemy.GetComponent<Chara_Info>().currentHP;
+			DamagePop(1);
 		}
 
 
@@ -244,6 +289,7 @@ public class StateMachine : MonoBehaviour
 
 		yield return new WaitForSeconds(2f);
 
+		DamagePop(2);
 		playerinfo.currentHP -= enemyinfo.damage;
 		playermove.playeranim.Play("flinch", 0, 0.0f);
 

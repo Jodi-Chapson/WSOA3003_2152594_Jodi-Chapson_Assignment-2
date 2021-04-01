@@ -69,14 +69,7 @@ public class BattleMenu : MonoBehaviour
 
         if (battlehud.activeSelf == true)
         {
-            if (statemachine.enemyinfo.type == 1)
-            {
-                Debug.Log("need to do this lel");
-            }
-            else if (statemachine.enemyinfo.type == 2)
-            {
-                Debug.Log("need to do this lel");
-            }
+            
 
             if (statemachine.playerinfo.currentHP <= 0)
             {
