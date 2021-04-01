@@ -114,8 +114,8 @@ public class StateMachine : MonoBehaviour
 			}
 			else if (target == 1)
 		    {
-				int doubledam = playerinfo.damage * 2;
-				dam.GetComponentInChildren<TextMeshPro>().text = doubledam.ToString();
+				int bonusdam = playerinfo.damage + (int) playerinfo.damage/2;
+				dam.GetComponentInChildren<TextMeshPro>().text = bonusdam.ToString();
 				dam.GetComponentInChildren<TextMeshPro>().color = Color.blue;
 			}
 
