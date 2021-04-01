@@ -28,6 +28,12 @@ public class StateMachine : MonoBehaviour
 
 
 	public Slider enemyhealth;
+	public Image enemydamagetype;
+	public Image enemyhead;
+
+
+	public Sprite fire, normaldmg;
+	public Sprite eyehead, firehead;
 	
 
 
@@ -50,6 +56,21 @@ public class StateMachine : MonoBehaviour
 		playermove.playeranim.SetInteger("State", 0);
 
 		BM.ToggleONBATTLEHUD();
+		if(enemyinfo.type == 1)
+		{
+			enemydamagetype.GetComponent<Image>().sprite = normaldmg;
+			enemyhead.GetComponent<Image>().sprite = eyehead;
+			
+
+		}
+		else if (enemyinfo.type == 2)
+		{
+			enemydamagetype.GetComponent<Image>().sprite = fire;
+			enemyhead.GetComponent<Image>().sprite = firehead;
+			
+		}
+		
+		
 
 		cam.CamFollow = false;
 		playerlastPos = player.transform.position;
@@ -99,6 +120,7 @@ public class StateMachine : MonoBehaviour
 		fadeanim.Play("Toblack", 0, 0.0f);
 
 		BM.ToggleOFFALLMenus();
+		BM.ToggleOFFBATTLEHUD();
 
 		//player.transform.position = playerlastPos;
 		enemy.transform.position = enemylastPos;
