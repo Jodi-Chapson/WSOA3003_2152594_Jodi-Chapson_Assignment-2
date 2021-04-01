@@ -12,12 +12,38 @@ public class CharacterMovement : MonoBehaviour
     public float percentMod;
     public GameObject sprite;
     public bool canmove;
+    public Animator playeranim;
+
+    public StateMachine statemachine;
 
     void Start()
     {
         rb = this.GetComponent<Rigidbody2D>();
         canmove = true;
     }
+
+
+    public void Update()
+    {
+        if(statemachine.state == BattleState.OUTCOMBAT)
+        {
+            if(rb.velocity == Vector2.zero)
+            {
+                    
+                playeranim.SetInteger("State",0);
+            }
+            else
+            {
+                
+                playeranim.SetInteger("State", 1);
+            }
+
+        }
+        
+    }
+
+
+
 
     public void FixedUpdate()
     {

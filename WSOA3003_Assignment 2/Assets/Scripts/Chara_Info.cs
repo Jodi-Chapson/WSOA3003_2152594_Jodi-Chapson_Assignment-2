@@ -11,9 +11,10 @@ public class Chara_Info : MonoBehaviour
     public int maxHP;
     public int currentHP;
     public StateMachine gamestate;
+    public Animator targetanimator;
 
 
-    
+
 
     //public void Start()
     //{

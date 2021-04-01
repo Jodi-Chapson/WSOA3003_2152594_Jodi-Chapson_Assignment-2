@@ -12,6 +12,10 @@ public class BattleMenu : MonoBehaviour
 
     public Text playerhp, playerdmg, enemyhp, enemydmg;
 
+    public Image headsprite;
+    public GameObject Arrow;
+   
+    
 
 
 
@@ -56,9 +60,24 @@ public class BattleMenu : MonoBehaviour
 
     public void Update()
     {
+        if (statemachine.playerinfo.currentHP <= 0)
+        {
+            statemachine.playerinfo.currentHP = 0;
+        }
+        playerhp.text = statemachine.playerinfo.currentHP.ToString();
+        playerdmg.text = statemachine.playerinfo.damage.ToString();
+
         if (battlehud.activeSelf == true)
         {
-            
+            if (statemachine.enemyinfo.type == 1)
+            {
+                Debug.Log("need to do this lel");
+            }
+            else if (statemachine.enemyinfo.type == 2)
+            {
+                Debug.Log("need to do this lel");
+            }
+
             if (statemachine.playerinfo.currentHP <= 0)
             {
                 statemachine.playerinfo.currentHP = 0;
@@ -73,7 +92,7 @@ public class BattleMenu : MonoBehaviour
             enemyhp.text = statemachine.enemyinfo.currentHP.ToString();
             enemydmg.text = statemachine.enemyinfo.damage.ToString();
 
-            Debug.Log("nani");
+            
 
         }
     }

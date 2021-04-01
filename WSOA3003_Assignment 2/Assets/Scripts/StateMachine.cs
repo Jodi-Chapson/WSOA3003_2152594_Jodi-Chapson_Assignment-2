@@ -25,6 +25,9 @@ public class StateMachine : MonoBehaviour
 	public Sprite openeddoor;
 	public GameObject endscreen;
 	public Support supp;
+
+
+	public Slider enemyhealth;
 	
 
 
@@ -44,6 +47,8 @@ public class StateMachine : MonoBehaviour
 
 		fadeanim.Play("Toblack", 0, 0.0f);
 
+		playermove.playeranim.SetInteger("State", 0);
+
 		BM.ToggleONBATTLEHUD();
 
 		cam.CamFollow = false;
@@ -52,6 +57,9 @@ public class StateMachine : MonoBehaviour
 		camlastpos = cam.transform.position;
 		player.transform.position = playerPos.transform.position;
 		enemy.transform.position = enemypos.transform.position;
+
+		enemyhealth.maxValue = enemy.GetComponent<Chara_Info>().maxHP;
+		enemyhealth.value = enemy.GetComponent<Chara_Info>().currentHP;
 
 		cam.transform.position = camplacement.transform.position;
 		playermove.sprite.transform.eulerAngles = new Vector3(0, 0, 0);
@@ -73,6 +81,8 @@ public class StateMachine : MonoBehaviour
 	public void PlayerTurn()
 	{
 		BM.ToggleBaseorBack();
+		BM.Arrow.SetActive(true);
+		BM.Arrow.transform.localPosition = new Vector2(-420, BM.Arrow.transform.localPosition.y);
 
 
 	}
@@ -83,8 +93,9 @@ public class StateMachine : MonoBehaviour
 	}
 	public IEnumerator Flee ()
 	{
-		yield return new WaitForSeconds (0.3f);
+		yield return new WaitForSeconds (0.2f);
 
+		BM.Arrow.SetActive(false);
 		fadeanim.Play("Toblack", 0, 0.0f);
 
 		BM.ToggleOFFALLMenus();
@@ -125,17 +136,25 @@ public class StateMachine : MonoBehaviour
 			StartCoroutine(WaterAttack());
 		}
 
-			
 
-		
+		BM.Arrow.SetActive(false);
+
 	}
 
 	public IEnumerator PlayerAttack()
 	{
-		yield return new WaitForSeconds(1f);
-
 		BM.ToggleOFFALLMenus();
+		
+		
+		yield return new WaitForSeconds(0.5f);
+
+		playermove.playeranim.Play("attack", 0, 0.0f);
+
+		yield return new WaitForSeconds(0.6f);
+
+
 		enemyinfo.currentHP -= playerinfo.damage;
+		enemyhealth.value = enemy.GetComponent<Chara_Info>().currentHP;
 
 		yield return new WaitForSeconds(1f);
 
@@ -156,16 +175,24 @@ public class StateMachine : MonoBehaviour
 
 	public IEnumerator WaterAttack()
 	{
-		yield return new WaitForSeconds(1f);
-
 		BM.ToggleOFFALLMenus();
+
+
+		yield return new WaitForSeconds(0.5f);
+		playermove.playeranim.Play("attack", 0, 0.0f);
+
+		yield return new WaitForSeconds(0.6f);
+
+
 		if (enemyinfo.type == 1)
 		{
 			enemyinfo.currentHP -= playerinfo.damage*2;
+			enemyhealth.value = enemy.GetComponent<Chara_Info>().currentHP;
 		}
 		else
 		{
 			enemyinfo.currentHP -= playerinfo.damage + (int) playerinfo.damage/2;
+			enemyhealth.value = enemy.GetComponent<Chara_Info>().currentHP;
 		}
 
 
@@ -190,9 +217,13 @@ public class StateMachine : MonoBehaviour
 
 	public IEnumerator EnemyAttack()
 	{
-		yield return new WaitForSeconds(1f);
+		BM.Arrow.transform.localPosition = new Vector2(420, BM.Arrow.transform.localPosition.y);
+		BM.Arrow.SetActive(true);
+
+		yield return new WaitForSeconds(2f);
 
 		playerinfo.currentHP -= enemyinfo.damage;
+		playermove.playeranim.Play("flinch", 0, 0.0f);
 
 
 		yield return new WaitForSeconds(1f);
@@ -216,6 +247,8 @@ public class StateMachine : MonoBehaviour
 
 	public IEnumerator EndFight(int conclusion)
 	{
+		BM.Arrow.SetActive(false);
+
 		yield return new WaitForSeconds(0.3f);
 
 		fadeanim.Play("Toblack", 0, 0.0f);
@@ -223,6 +256,7 @@ public class StateMachine : MonoBehaviour
 		BM.ToggleOFFALLMenus();
 		BM.ToggleOFFBATTLEHUD();
 
+		playermove.canmove = true;
 		if (conclusion == 1)
 		{
 			if (enemyinfo.type == 1)

@@ -9,14 +9,22 @@ public class HPBar : MonoBehaviour
     public Slider healthbar;
 
 
+ 
+
+
+
     void Start()
     {
-        healthbar.maxValue = target.maxHP;
+        
+        
+            healthbar.maxValue = target.maxHP;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         
         healthbar.value = target.currentHP;
         
